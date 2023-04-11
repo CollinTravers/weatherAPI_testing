@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 
-let lat = '-42.1'
-let lon = '72.1'
+let zipcode = '02115'
+let countrycode = 'US'
 
 export async function GET(request) {
   console.log("Inside the route")
 
-  const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${process.env.API_KEY}`);
+  const res = await fetch(`http://api.openweathermap.org/geo/1.0/zip?zip=${zipcode},${countrycode}&appid=${process.env.API_KEY}`);
   
   const data = await res.json();
 
@@ -17,13 +17,13 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
-  console.log("-------- INSIDE THE WEATHER POST ---------")
+  console.log("-------- INSIDE THE LOCATION POST ---------")
   
   const res = await request.json()
   console.log(res)
-  lat = res.lat
-  lon = res.lon
-  console.log("POSTING")
+
+  zipcode = res.zipcode
+  countrycode = res.countrycode
 
   return NextResponse.json({ res })
 }

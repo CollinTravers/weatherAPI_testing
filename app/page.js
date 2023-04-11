@@ -1,15 +1,15 @@
 "use client";
 
 import './globals.css'
-import { use, useState } from "react"
+import { useState } from "react"
+import { kToF } from './getFahrenheit';
 
 export default function Home() {
 
   const [temp, setTemp] = useState(0)
-  const [lat, setLat] = useState(0)
-  const [lon, setLong] = useState(0)
+  const [city, setCity] = useState('Boston')
 
-  async function makeWeatherCall () {
+  async function getWeatherCall () {
     const response = await fetch('/api/weather')
     const data = await response.json()
 
@@ -17,11 +17,30 @@ export default function Home() {
     const dataTemp = data.data.main.temp
 
     console.log(dataTemp)
-
-    setTemp(dataTemp)
+    let convertedTemp = kToF(dataTemp)
+    setTemp(convertedTemp)
   }
 
-  function handleSubmit(event){
+  async function getLocationInformation(){
+    const response = await fetch('/api/location')
+    const data = await response.json()
+
+    //Data is nested, so we need to get the actual data temp
+    const dataLat = String(data.data.lat)
+    const dataLon = String(data.data.lon)
+
+    console.log(dataLat)
+    console.log(dataLon)
+
+    setCity(data.data.name)
+
+    return {
+      lat: dataLat, 
+      lon: dataLon
+    }
+  }
+
+  async function handleSubmit(event){
     // Prevent the browser from reloading the page
     event.preventDefault();
 
@@ -31,32 +50,41 @@ export default function Home() {
     const form = event.target;
     const formData = new FormData(form);
 
-    console.log("FormData: ", formData)
-
     // Or you can work with it as a plain object:
     const formJson = Object.fromEntries(formData.entries());
 
     // You can pass formData as a fetch body directly:
-    fetch('/api/weather', { method: form.method, body: JSON.stringify(formJson) });
+    await fetch('/api/location', { method: form.method, body: JSON.stringify(formJson) });
 
-    console.log(formJson);
+    //Now we want to update the temperature field, instead of clicking another button
+    let cords = await getLocationInformation()
+
+    console.log("LATITUDE: ", cords.lat, cords.lon)
+
+    console.log(JSON.stringify(cords))
+
+    //now we want to fetch the weather from the original API
+    await fetch('/api/weather', { method: form.method, body: JSON.stringify(cords) });
+
+    //then call the GET request to update everything
+    await getWeatherCall()
+
   }
 
   return (
     <div>
       <form className="m-5 p-4" method="POST" onSubmit={handleSubmit}>
-        <label>
-          Latitude: 
-          <input className="border-solid border-2" name="Lat" type='text'></input>
+        <label className="m-2 p-2">
+          ZIP CODE: 
+          <input className="border-solid border-2 m-2" name="zipcode" type='text'></input>
         </label>
-        <label>
-          Longitude:
-          <input className="border-solid border-2" name="Lon" type='text'></input>
+        <label className="m-2 p-2">
+          COUNTRY CODE:
+          <input className="border-solid border-2 m-2" name="countrycode" type='text'></input>
         </label>
         <button className="m-5 p-4 bg-red-500 border-solid border-2 rounded"type="submit">Submit Form</button>
       </form>
-      <div className="bg-green-700 m-5 p-4">Temp: {temp}</div>
-      <button className="bg-red-500 m-5 p-4 rounded" onClick={makeWeatherCall}>Button</button>
+      <div className="bg-green-300 m-5 p-4">It is currently {temp} degrees in {city}</div>
     </div>
   )
 }
