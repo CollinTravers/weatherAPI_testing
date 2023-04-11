@@ -21,14 +21,14 @@ export default function Home() {
     setTemp(dataTemp)
   }
 
-  function handleSubmit(e){
+  function handleSubmit(event){
     // Prevent the browser from reloading the page
-    e.preventDefault();
+    event.preventDefault();
 
     console.log("User has submitted")
 
     // Read the form data
-    const form = e.target;
+    const form = event.target;
     const formData = new FormData(form);
 
     console.log("FormData: ", formData)
@@ -37,7 +37,7 @@ export default function Home() {
     const formJson = Object.fromEntries(formData.entries());
 
     // You can pass formData as a fetch body directly:
-    fetch('/api/weather', { method: form.method, body: formJson });
+    fetch('/api/weather', { method: form.method, body: JSON.stringify(formJson) });
 
     console.log(formJson);
   }
