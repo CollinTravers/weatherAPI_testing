@@ -14,3 +14,12 @@ export async function GET(request) {
 
   return NextResponse.json({ data })
 }
+
+export async function POST(request) {
+  console.log("-------- INSIDE THE POST ---------")
+  
+  const res = await request.json()
+  //console.log(res)
+  console.log("POSTING")
+  //return NextResponse.json({ res })
+}
