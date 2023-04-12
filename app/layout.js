@@ -1,14 +1,14 @@
 import './globals.css'
 
 export const metadata = {
-  title: 'Food Without a Story',
-  description: 'Recipes without page long stories',
+  title: 'Weather On Demand',
+  description: 'Simple weather website that incorperates a weather API',
 }
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="bg-gray-100">{children}</body>
     </html>
   )
 }
