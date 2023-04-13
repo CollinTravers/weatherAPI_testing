@@ -2,12 +2,23 @@
 
 import './globals.css'
 import { useEffect, useState } from "react"
-import { kToF } from './getFahrenheit';
 import Header from './header.js';
+import Weather_Card from './weather_card';
+import { convertToTime } from './convertToTime';
+import { setConfig } from 'next/config';
+import { windDirectionToCompass } from './windDirectionToCompass';
 
 export default function Home() {
 
-  const [temp, setTemp] = useState()
+  const [weatherData, setWeatherData] = useState({
+    weather: '',
+    temp: '',
+    humidity: '',
+    windSpeed: '',
+    windDirection: '',
+    sunrise: '',
+    sunset: '',
+  })
   const [city, setCity] = useState('Boston')
 
   //Want to get initial temperature
@@ -20,11 +31,32 @@ export default function Home() {
     const data = await response.json()
 
     //Data is nested, so we need to get the actual data temp
-    const dataTemp = data.data.main.temp
+    const dataTemp = String(data.data.main.temp)
 
-    console.log(dataTemp)
-    let convertedTemp = kToF(dataTemp)
-    setTemp(convertedTemp)
+    //setting weather data
+    const weather = String(data.data.weather[0].main)
+    const humidity = String(data.data.main.humidity)
+    const windSpeed = String(data.data.wind.speed)
+
+    const compassDir = windDirectionToCompass(data.data.wind.deg)
+
+    const windDirection = String(compassDir)
+
+    const sunriseDate = convertToTime(data.data.sys.sunrise)
+    const sunsetDate = convertToTime(data.data.sys.sunset)
+
+    const sunrise = String(sunriseDate)
+    const sunset = String(sunsetDate)
+
+    setWeatherData({
+      weather: weather,
+      temp: dataTemp,
+      humidity: humidity,
+      windSpeed: windSpeed,
+      windDirection: windDirection,
+      sunrise: sunrise,
+      sunset: sunset,
+    })
   }
 
   async function getLocationInformation(){
@@ -39,14 +71,9 @@ export default function Home() {
     //GOOD status from the API
     //This API will return a cod field only when the params are wrong, we only want to return information when its a good status (code = undefined)
     if (code === undefined) {
-      console.log("CODE: ", String(code))
-
       //Data is nested, so we need to get the actual data temp
       const dataLat = String(data.data.lat)
       const dataLon = String(data.data.lon)
-
-      console.log(dataLat)
-      console.log(dataLon)
 
       setCity(data.data.name)
 
@@ -64,8 +91,6 @@ export default function Home() {
     // Prevent the browser from reloading the page
     event.preventDefault();
 
-    console.log("User has submitted")
-
     // Read the form data
     const form = event.target;
     const formData = new FormData(form);
@@ -79,8 +104,6 @@ export default function Home() {
     //Now we want to update the temperature field, instead of clicking another button
     let cords = await getLocationInformation()
 
-    console.log(cords)
-
     if (cords != undefined){
       //now we want to fetch the weather from the original API
       await fetch('/api/weather', { method: form.method, body: JSON.stringify(cords) });
@@ -93,18 +116,28 @@ export default function Home() {
   return (
     <div>
       <Header />
-      <form className="m-5 p-4" method="POST" onSubmit={handleSubmit}>
-        <label className="m-2 p-2">
-          ZIP CODE: 
-          <input className="border-solid border-2 m-2 w-20" name="zipcode" type='text' placeholder='02115'></input>
-        </label>
-        <label className="m-2 p-2">
-          COUNTRY CODE:
-          <input className="border-solid border-2 m-2" name="countrycode" type='text' placeholder='US'></input>
-        </label>
-        <button className="m-5 p-1 bg-red-500 border-solid border-2 rounded"type="submit">Submit Form</button>
-      </form>
-      <div className="bg-green-300 m-5 p-4">It is currently {temp} degrees in {city}</div>
+      <div className="block text-center mx-auto my-auto">
+        <form className="m-5 p-4" method="POST" onSubmit={handleSubmit}>
+          <label className="m-2 p-2">
+            ZIP CODE: 
+            <input className="border-solid border-2 m-2 w-20" name="zipcode" type='text' placeholder='02115'></input>
+          </label>
+          <label className="m-2 p-2">
+            COUNTRY CODE:
+            <input className="border-solid border-2 m-2 w-20" name="countrycode" type='text' placeholder='US'></input>
+          </label>
+          <button className="m-5 p-1 bg-red-500 border-solid border-2 rounded"type="submit">Submit Form</button>
+        </form>
+      </div>
+      <div className='p-4 flex justify-center self-auto'>
+        <Weather_Card data={weatherData.weather} title={"Conditions"} text={""}/>
+        <Weather_Card data={weatherData.temp} title={"Temperature"} text={"degrees"}/>
+        <Weather_Card data={weatherData.humidity} title={"Humidity"} text={"%"}/>
+        <Weather_Card data={weatherData.windSpeed} title={"Wind Speed"} text={"miles/hour"}/>
+        <Weather_Card data={weatherData.windDirection} title={"Wind Direction"} text={""}/>
+        <Weather_Card data={weatherData.sunrise} title={"Sunrise"} text={""}/>
+        <Weather_Card data={weatherData.sunset} title={"Sunset"} text={""}/>
+      </div>
     </div>
   )
 }
