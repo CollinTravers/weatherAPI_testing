@@ -5,7 +5,6 @@ import { useEffect, useState } from "react"
 import Header from './header.js';
 import Weather_Card from './weather_card';
 import { convertToTime } from './convertToTime';
-import { setConfig } from 'next/config';
 import { windDirectionToCompass } from './windDirectionToCompass';
 
 export default function Home() {
@@ -66,8 +65,6 @@ export default function Home() {
 
     let code = data.data.cod
 
-    console.log(code)
-
     //GOOD status from the API
     //This API will return a cod field only when the params are wrong, we only want to return information when its a good status (code = undefined)
     if (code === undefined) {
@@ -115,9 +112,9 @@ export default function Home() {
 
   return (
     <div>
-      <Header />
-      <div className="block text-center mx-auto my-auto">
-        <form className="m-5 p-4" method="POST" onSubmit={handleSubmit}>
+      <Header city={city}/>
+      <div className="block text-center mx-auto my-auto font-sans">
+        <form className="mx-5 p-4" method="POST" onSubmit={handleSubmit}>
           <label className="m-2 p-2">
             ZIP CODE: 
             <input className="border-solid border-2 m-2 w-20" name="zipcode" type='text' placeholder='02115'></input>
@@ -126,18 +123,20 @@ export default function Home() {
             COUNTRY CODE:
             <input className="border-solid border-2 m-2 w-20" name="countrycode" type='text' placeholder='US'></input>
           </label>
-          <button className="m-5 p-1 bg-red-500 border-solid border-2 rounded"type="submit">Submit Form</button>
+          <button className="m-5 p-1 bg-gray-100 border-solid border-2 rounded"type="submit">Submit Form</button>
         </form>
       </div>
-      <div className='p-4 flex justify-center self-auto'>
-        <Weather_Card data={weatherData.weather} title={"Conditions"} text={""}/>
-        <Weather_Card data={weatherData.temp} title={"Temperature"} text={"degrees"}/>
-        <Weather_Card data={weatherData.humidity} title={"Humidity"} text={"%"}/>
-        <Weather_Card data={weatherData.windSpeed} title={"Wind Speed"} text={"miles/hour"}/>
-        <Weather_Card data={weatherData.windDirection} title={"Wind Direction"} text={""}/>
-        <Weather_Card data={weatherData.sunrise} title={"Sunrise"} text={""}/>
-        <Weather_Card data={weatherData.sunset} title={"Sunset"} text={""}/>
-      </div>
+      <section className='flex justify-evenly my-10 mx-2 font-sans'>
+        <div className='grid grid-flow-row gap-8 lg:grid-cols-7 md:grid-cols-3 sm:grid-cols-1'>
+          <Weather_Card data={weatherData.weather} title={"Conditions"} text={""}/>
+          <Weather_Card data={weatherData.temp} title={"Temperature"} text={"degrees"}/>
+          <Weather_Card data={weatherData.humidity} title={"Humidity"} text={"%"}/>
+          <Weather_Card data={weatherData.windSpeed} title={"Wind Speed"} text={"miles/hour"}/>
+          <Weather_Card data={weatherData.windDirection} title={"Wind Direction"} text={""}/>
+          <Weather_Card data={weatherData.sunrise} title={"Sunrise"} text={""}/>
+          <Weather_Card data={weatherData.sunset} title={"Sunset"} text={""}/>
+        </div>
+      </section>
     </div>
   )
 }
