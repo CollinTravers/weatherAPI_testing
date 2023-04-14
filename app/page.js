@@ -6,6 +6,13 @@ import Header from './header.js';
 import Weather_Card from './weather_card';
 import { convertToTime } from './convertToTime';
 import { windDirectionToCompass } from './windDirectionToCompass';
+import sunnyPic from '../public/sunny.svg'
+import compassPic from '../public/compass.svg'
+import humidityPic from '../public/humidity.svg'
+import moonPic from '../public/moon.svg'
+import wakeupPic from '../public/wakeup.svg'
+import windPic from '../public/wind.svg'
+import temperaturePic from '../public/temperature.svg'
 
 export default function Home() {
 
@@ -127,14 +134,14 @@ export default function Home() {
         </form>
       </div>
       <section className='flex justify-evenly my-10 mx-2 font-sans'>
-        <div className='grid grid-flow-row gap-8 lg:grid-cols-7 md:grid-cols-3 sm:grid-cols-1'>
-          <Weather_Card data={weatherData.weather} title={"Conditions"} text={""}/>
-          <Weather_Card data={weatherData.temp} title={"Temperature"} text={"degrees"}/>
-          <Weather_Card data={weatherData.humidity} title={"Humidity"} text={"%"}/>
-          <Weather_Card data={weatherData.windSpeed} title={"Wind Speed"} text={"miles/hour"}/>
-          <Weather_Card data={weatherData.windDirection} title={"Wind Direction"} text={""}/>
-          <Weather_Card data={weatherData.sunrise} title={"Sunrise"} text={""}/>
-          <Weather_Card data={weatherData.sunset} title={"Sunset"} text={""}/>
+        <div className='grid grid-flow-row gap-8 lg:grid-cols-7 md:grid-cols-3 sm:grid-cols-2'>
+          <Weather_Card data={weatherData.weather} title={"Conditions"} text={""} image={sunnyPic}/>
+          <Weather_Card data={weatherData.temp} title={"Temperature"} text={'\u2109'} image={temperaturePic}/>
+          <Weather_Card data={weatherData.humidity} title={"Humidity"} text={"%"} image={humidityPic}/>
+          <Weather_Card data={weatherData.windSpeed} title={"Wind Speed"} text={"mph"} image={windPic}/>
+          <Weather_Card data={weatherData.windDirection} title={"Wind Direction"} text={""} image={compassPic}/>
+          <Weather_Card data={weatherData.sunrise} title={"Sunrise"} text={""} image={wakeupPic}/>
+          <Weather_Card data={weatherData.sunset} title={"Sunset"} text={""} image={moonPic}/>
         </div>
       </section>
     </div>
