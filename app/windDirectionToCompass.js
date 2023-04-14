@@ -1,5 +1,4 @@
 export function windDirectionToCompass(degrees){
-    console.log(degrees)
     //a function that will take in degrees and return a compass reading
     const compassArray = ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"]
     

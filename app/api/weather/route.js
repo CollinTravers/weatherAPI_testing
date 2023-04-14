@@ -4,7 +4,7 @@ let lat = '42.3399'
 let lon = '-71.0899'
 
 export async function GET(request) {
-  const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=imperial&appid=${process.env.API_KEY}`);
+  const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=imperial&appid=${process.env.API_KEY}`, { cache: 'no-store' });
   
   const data = await res.json();
 
