@@ -2,7 +2,6 @@
 
 import './globals.css'
 import { useEffect, useState } from "react"
-import { Analytics } from '@vercel/analytics/react';
 import Header from './header.js';
 import Weather_Card from './weather_card';
 import { convertToTime } from './convertToTime';
@@ -156,7 +155,6 @@ export default function Home() {
           <Weather_Card data={weatherData.sunset} title={"Sunset"} text={""} image={moonPic}/>
         </div>
       </section>
-      <Analytics/>
     </div>
   )
 }

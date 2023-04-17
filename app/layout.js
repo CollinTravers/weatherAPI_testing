@@ -1,6 +1,7 @@
 import './globals.css'
 
 import { Roboto } from 'next/font/google'
+import { Analytics } from '@vercel/analytics/react';
 
 export const metadata = {
   title: 'Weather On Demand',
@@ -17,7 +18,10 @@ const roboto = Roboto({
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${roboto.variable} bg-sky-100`}>{children}</body>
+      <body className={`${roboto.variable} bg-sky-100`}>
+        {children}
+        <Analytics/>
+      </body>
     </html>
   )
 }
