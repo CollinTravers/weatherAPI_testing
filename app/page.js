@@ -34,7 +34,6 @@ export default function Home() {
 
   async function getWeatherCall () {
     const response = await fetch('/api/weather')
-    console.log(response)
 
     //init data
     let data = ''
