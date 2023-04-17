@@ -2,7 +2,7 @@
 import { NextResponse } from 'next/server'
 
 const allowedOrigins = process.env.NODE_ENV === 'production'
-  ? ['https://www.yoursite.com', 'https://yoursite.com']
+  ? ['https://weather-api-testing.vercel.app']
   : ['http://localhost:3000']
 
 const noOrigin = process.env.NODE_ENV === 'production'
