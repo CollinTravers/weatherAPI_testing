@@ -34,7 +34,19 @@ export default function Home() {
 
   async function getWeatherCall () {
     const response = await fetch('/api/weather')
-    const data = await response.json()
+    console.log(response)
+
+    //init data
+    let data = ''
+
+    if (response.status === 200){
+      data = await response.json()
+    } else {
+      //status was bad, such as a 429
+      alert("Too many requests, try again later")
+      return
+    }
+    
 
     //Data is nested, so we need to get the actual data temp
     const dataTemp = String(data.data.main.temp)
