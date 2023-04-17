@@ -13,7 +13,7 @@ const noOrigin = process.env.NODE_ENV === 'production'
 export function middleware(request) {
     const origin = request.headers.get('origin')
 
-    if (origin && !allowedOrigins.includes(origin) || (noOrigin && !origin)){
+    if (origin && !allowedOrigins.includes(origin)){
         return new NextResponse(null, {
           status: 400, 
           statusText: 'Bad Request',
